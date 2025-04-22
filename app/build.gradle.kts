@@ -71,4 +71,5 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-storage")
+    implementation ("androidx.compose.material:material-icons-extended:1.7.8")
 }
