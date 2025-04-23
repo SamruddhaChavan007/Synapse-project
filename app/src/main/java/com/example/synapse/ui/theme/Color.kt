@@ -13,3 +13,5 @@ val Pink40 = Color(0xFF7D5260)
 val PureWhite = Color(0xFFFFFFFF)
 val LightGray = Color(0xFFE0E0E0) // for input fields if needed
 val IconGray = Color(0xFFBDBDBD)  // for subtle icons (optional)
+val Green_BG = Color(0xFF007A56)
+val Black = Color.Black
