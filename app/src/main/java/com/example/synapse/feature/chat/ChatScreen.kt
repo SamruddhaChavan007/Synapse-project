@@ -14,8 +14,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,6 +40,7 @@ import com.example.synapse.model.Message
 import com.example.synapse.ui.theme.Aqua_Island
 import com.example.synapse.ui.theme.Black
 import com.example.synapse.ui.theme.Green_BG
+import com.example.synapse.ui.theme.PureWhite
 import com.example.synapse.ui.theme.Vista_Blue
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -97,6 +102,9 @@ fun ChatMessages(
                     })
             )
             IconButton(
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = PureWhite
+                ),
                 onClick = {
                     /*ToDo*/
                     onSendMessage(msg.value)
