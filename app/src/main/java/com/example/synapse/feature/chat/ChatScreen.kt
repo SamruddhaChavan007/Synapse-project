@@ -33,7 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.synapse.model.Message
-import com.example.synapse.ui.theme.PureWhite
+import com.example.synapse.ui.theme.Aqua_Island
+import com.example.synapse.ui.theme.Black
+import com.example.synapse.ui.theme.Green_BG
+import com.example.synapse.ui.theme.Vista_Blue
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -44,6 +47,7 @@ fun ChatScreen(navController: NavController, channelId: String) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
+                .background(Green_BG)
         ) {
             val viewModel: ChatViewModel = hiltViewModel()
             LaunchedEffect(key1 = true) {
@@ -108,9 +112,9 @@ fun ChatMessages(
 fun ChatBubble(message: Message) {
     val isCurrentUser = message.senderId == Firebase.auth.currentUser?.uid
     val bubbleColor = if (isCurrentUser) {
-        Color.Blue
+        Vista_Blue
     } else {
-        Color.Green
+        Aqua_Island
     }
     val alignment = if (isCurrentUser) {
         Alignment.CenterEnd
@@ -132,7 +136,7 @@ fun ChatBubble(message: Message) {
                 .align(alignment)
         ) {
             Text(
-                text = message.message, color = PureWhite, modifier = Modifier.padding(8.dp)
+                text = message.message, color = Black, modifier = Modifier.padding(8.dp)
             )
         }
     }

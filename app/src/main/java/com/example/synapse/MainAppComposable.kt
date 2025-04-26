@@ -25,8 +25,6 @@ fun MainApp() {
 
         val start = if (currentuser != null) "home" else "login"
 
-
-
         NavHost(navController = navController, startDestination = start) {
 
             composable("login") {
@@ -38,11 +36,11 @@ fun MainApp() {
             composable("home") {
                 HomeScreen(navController)
             }
-            composable("chat/{channelId}", arguments = listOf(
+            composable(
+                "chat/{channelId}", arguments = listOf(
                 navArgument("channelId") {
                     type = NavType.StringType
-                }
-            )) {
+                })) {
                 val channelId = it.arguments?.getString("channelId") ?: ""
                 ChatScreen(navController, channelId)
             }
