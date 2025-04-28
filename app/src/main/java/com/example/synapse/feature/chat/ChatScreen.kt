@@ -1,14 +1,20 @@
 package com.example.synapse.feature.chat
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,17 +36,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.synapse.model.Message
 import com.example.synapse.ui.theme.Aqua_Island
 import com.example.synapse.ui.theme.Black
 import com.example.synapse.ui.theme.Green_BG
+import com.example.synapse.ui.theme.Pacifico
 import com.example.synapse.ui.theme.PureWhite
+import com.example.synapse.ui.theme.Roboto
 import com.example.synapse.ui.theme.Vista_Blue
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -62,8 +75,7 @@ fun ChatScreen(navController: NavController, channelId: String) {
             ChatMessages(
                 messages = messages.value, onSendMessage = { message ->
                     viewModel.sendMessage(channelId, message)
-                }
-            )
+                })
         }
     }
 }
@@ -104,8 +116,7 @@ fun ChatMessages(
             IconButton(
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = PureWhite
-                ),
-                onClick = {
+                ), onClick = {
                     /*ToDo*/
                     onSendMessage(msg.value)
                     msg.value = ""
@@ -124,6 +135,11 @@ fun ChatBubble(message: Message) {
     } else {
         Aqua_Island
     }
+    val bubbleCharacter = if (isCurrentUser) {
+        Vista_Blue
+    } else {
+        PureWhite
+    }
     val alignment = if (isCurrentUser) {
         Alignment.CenterEnd
     } else {
@@ -135,17 +151,55 @@ fun ChatBubble(message: Message) {
             .padding(vertical = 4.dp)
             .padding(horizontal = 8.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-                .background(
-                    color = bubbleColor, shape = RoundedCornerShape(8.dp)
+        if (!isCurrentUser) {
+            Row(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(alignment), verticalAlignment = Alignment.CenterVertically
+            ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(bubbleCharacter)
+                    ) {
+                        Text(
+                            text = message.senderName[0].toString().uppercase(),
+                            color = Black,
+                            style = TextStyle(fontSize = 20.sp, fontFamily = Roboto),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.align(Alignment.Center),
+                        )
+                    }
+                Box(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .background(
+                            color = bubbleColor,
+                            shape = RoundedCornerShape(8.dp))
                 )
-                .align(alignment)
-        ) {
-            Text(
-                text = message.message, color = Black, modifier = Modifier.padding(8.dp)
-            )
+                {
+                    Spacer(modifier = Modifier.padding(15.dp))
+                    Text(
+                        text = message.message, color = Black, modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
+        } else{
+            Row(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .background(
+                        color = bubbleColor,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .align(alignment), verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = message.message, color = Black, modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
 }
