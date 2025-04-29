@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -51,6 +52,7 @@ import com.example.synapse.model.Message
 import com.example.synapse.ui.theme.Aqua_Island
 import com.example.synapse.ui.theme.Black
 import com.example.synapse.ui.theme.Green_BG
+import com.example.synapse.ui.theme.Hit_Gray
 import com.example.synapse.ui.theme.Pacifico
 import com.example.synapse.ui.theme.PureWhite
 import com.example.synapse.ui.theme.Roboto
@@ -99,13 +101,23 @@ fun ChatMessages(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(8.dp)
-                .background(color = Color.LightGray), verticalAlignment = Alignment.CenterVertically
+                .background(color = Hit_Gray)
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButton(
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = Black
+                ), onClick = {
+                    /*ToDo*/
+                }) {
+                Icon(imageVector = Icons.Filled.AttachFile, contentDescription = "attach_file")
+            }
             TextField(
                 value = msg.value,
                 onValueChange = { msg.value = it },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
+                    .clip(RoundedCornerShape(12.dp)),
                 placeholder = { Text(text = "Type a message") },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
@@ -115,7 +127,7 @@ fun ChatMessages(
             )
             IconButton(
                 colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = PureWhite
+                    contentColor = Black
                 ), onClick = {
                     /*ToDo*/
                     onSendMessage(msg.value)
@@ -151,53 +163,45 @@ fun ChatBubble(message: Message) {
             .padding(vertical = 4.dp)
             .padding(horizontal = 8.dp)
     ) {
-        if (!isCurrentUser) {
-            Row(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(alignment), verticalAlignment = Alignment.CenterVertically
-            ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(bubbleCharacter)
-                    ) {
-                        Text(
-                            text = message.senderName[0].toString().uppercase(),
-                            color = Black,
-                            style = TextStyle(fontSize = 20.sp, fontFamily = Roboto),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.align(Alignment.Center),
-                        )
-                    }
+        Row(
+            modifier = Modifier
+                .padding(8.dp)
+                .align(alignment),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (!isCurrentUser) {
                 Box(
                     modifier = Modifier
-                        .padding(4.dp)
-                        .background(
-                            color = bubbleColor,
-                            shape = RoundedCornerShape(8.dp))
-                )
-                {
-                    Spacer(modifier = Modifier.padding(15.dp))
+                        .fillMaxHeight()
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(bubbleCharacter)
+                ) {
                     Text(
-                        text = message.message, color = Black, modifier = Modifier.padding(8.dp)
+                        text = message.senderName[0].toString().uppercase(),
+                        color = Black,
+                        style = TextStyle(fontSize = 20.sp, fontFamily = Roboto),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(Alignment.Center),
                     )
                 }
-            }
-        } else{
-            Row(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .background(
-                        color = bubbleColor,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .align(alignment), verticalAlignment = Alignment.CenterVertically
-            ) {
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = message.message, color = Black, modifier = Modifier.padding(8.dp)
+                    text = message.message.trim(),
+                    color = Black,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(bubbleColor)
+                        .padding(8.dp)
+                )
+            } else {
+                Text(
+                    text = message.message.trim(),
+                    color = Black,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(bubbleColor)
+                        .padding(8.dp)
                 )
             }
         }
