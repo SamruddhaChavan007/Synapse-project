@@ -17,4 +17,4 @@ val Green_BG = Color(0xFF007A56)
 val Black = Color.Black
 val Vista_Blue = Color(0xFF8cd4a7)
 val Aqua_Island = Color(0xFFb2e0d6)
-val Hit_Gray = Color(0xFF9bb0a5)
+val Light_Gray = Color.LightGray

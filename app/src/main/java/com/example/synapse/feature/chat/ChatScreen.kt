@@ -1,6 +1,5 @@
 package com.example.synapse.feature.chat
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,11 +20,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AttachFile
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -43,7 +39,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -52,8 +47,6 @@ import com.example.synapse.model.Message
 import com.example.synapse.ui.theme.Aqua_Island
 import com.example.synapse.ui.theme.Black
 import com.example.synapse.ui.theme.Green_BG
-import com.example.synapse.ui.theme.Hit_Gray
-import com.example.synapse.ui.theme.Pacifico
 import com.example.synapse.ui.theme.PureWhite
 import com.example.synapse.ui.theme.Roboto
 import com.example.synapse.ui.theme.Vista_Blue
@@ -101,7 +94,7 @@ fun ChatMessages(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .background(color = Hit_Gray)
+                .background(color = Color.LightGray)
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -116,7 +109,8 @@ fun ChatMessages(
             TextField(
                 value = msg.value,
                 onValueChange = { msg.value = it },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
                     .clip(RoundedCornerShape(12.dp)),
                 placeholder = { Text(text = "Type a message") },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
@@ -132,7 +126,9 @@ fun ChatMessages(
                     /*ToDo*/
                     onSendMessage(msg.value)
                     msg.value = ""
-                }) {
+                },
+                enabled = msg.value.isNotEmpty()
+            ) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "send")
             }
         }
