@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -53,6 +54,7 @@ import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.synapse.feature.home.ChannelItem
 import com.example.synapse.model.Message
 import com.example.synapse.ui.theme.Aqua_Island
 import com.example.synapse.ui.theme.Black
@@ -68,7 +70,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun ChatScreen(navController: NavController, channelId: String) {
+fun ChatScreen(navController: NavController, channelId: String, channelName: String) {
     Scaffold {
         val viewModel: ChatViewModel = hiltViewModel()
         val chooserDialog = remember {
@@ -86,6 +88,13 @@ fun ChatScreen(navController: NavController, channelId: String) {
                     viewModel.sendImageMessage(it, channelId)
                 }
             }
+        }
+
+        val imageLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri: Uri? ->
+            // send Image to Server.
+            uri?.let { viewModel.sendImageMessage(it, channelId) }
         }
 
         fun createImageUri(): Uri {
@@ -127,7 +136,7 @@ fun ChatScreen(navController: NavController, channelId: String) {
                     viewModel.sendMessage(channelId, message)
                 }, onImageClicked = {
                     chooserDialog.value = true
-                })
+                }, channelName = channelName)
         }
         if (chooserDialog.value) {
             ContentSelectionDialog(onCameraSelected = {
@@ -140,6 +149,7 @@ fun ChatScreen(navController: NavController, channelId: String) {
                 }
             }, onGallerySelected = {
                 chooserDialog.value = false
+                imageLauncher.launch("image/*")
             })
         }
     }
@@ -172,6 +182,7 @@ fun ContentSelectionDialog(onCameraSelected: () -> Unit, onGallerySelected: () -
 
 @Composable
 fun ChatMessages(
+    channelName: String,
     messages: List<Message>,
     onSendMessage: (String) -> Unit,
     onImageClicked: () -> Unit,
@@ -181,8 +192,13 @@ fun ChatMessages(
     val msg = remember {
         mutableStateOf("")
     }
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn {
+    Column(modifier = Modifier.fillMaxSize()) {
+        LazyColumn (modifier = Modifier.weight(1f)) {
+            item {
+                ChannelItem(channelName = channelName, Modifier) {
+
+                }
+            }
             items(messages) { message ->
                 ChatBubble(message = message)
             }
@@ -190,7 +206,7 @@ fun ChatMessages(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter)
+                //.align(Alignment.BottomCenter)
                 .background(color = Color.LightGray)
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -290,7 +306,8 @@ fun ChatBubble(message: Message) {
                         AsyncImage(
                             model = message.imageUrl,
                             contentDescription = null,
-                            modifier = Modifier.size(200.dp)
+                            modifier = Modifier.size(200.dp),
+                            contentScale = ContentScale.Crop
                         )
                     }
                     Text(
@@ -309,7 +326,8 @@ fun ChatBubble(message: Message) {
                         AsyncImage(
                             model = message.imageUrl,
                             contentDescription = null,
-                            modifier = Modifier.size(200.dp)
+                            modifier = Modifier.size(200.dp),
+                            contentScale = ContentScale.Crop
                         )
                     }
                     Text(

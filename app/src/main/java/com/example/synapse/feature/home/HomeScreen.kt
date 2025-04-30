@@ -120,8 +120,10 @@ fun HomeScreen(navController: NavController) {
                 }
                 items(channels.value) { channel ->
                     Column {
-                        ChannelItem(channel.name) {
-                            navController.navigate("chat/${channel.id}")
+                        ChannelItem(
+                            channelName = channel.name,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp)) {
+                            navController.navigate("chat/${channel.id}&${channel.name}")
                         }
 //                        Text(
 //                            text = channel.name, color = Black,
@@ -151,11 +153,11 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun ChannelItem(channelName: String, onClick: () -> Unit) {
+fun ChannelItem(channelName: String, modifier: Modifier, onClick: () -> Unit) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp)
+            //.padding(horizontal = 16.dp, vertical = 2.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(PureWhite)
             .clickable {
@@ -218,5 +220,5 @@ fun AddChannelDialog(onAddChannel: (String) -> Unit) {
 @Preview
 @Composable
 fun PreviewItem() {
-    ChannelItem(channelName = "Test Channel", {})
+    ChannelItem(channelName = "Test Channel", Modifier, {})
 }
