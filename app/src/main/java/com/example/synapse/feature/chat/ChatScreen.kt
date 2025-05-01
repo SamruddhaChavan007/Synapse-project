@@ -7,15 +7,21 @@ import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,8 +30,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -33,6 +42,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -59,6 +70,7 @@ import com.example.synapse.model.Message
 import com.example.synapse.ui.theme.Aqua_Island
 import com.example.synapse.ui.theme.Black
 import com.example.synapse.ui.theme.Green_BG
+import com.example.synapse.ui.theme.Light_Gray
 import com.example.synapse.ui.theme.PureWhite
 import com.example.synapse.ui.theme.Roboto
 import com.example.synapse.ui.theme.Vista_Blue
@@ -69,9 +81,36 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(navController: NavController, channelId: String, channelName: String) {
-    Scaffold {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.LightGray,
+                    titleContentColor = Black
+                ),
+                title = {
+                    Text(channelName,
+                        color = Black,
+                        )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
+        },
+
+    )
+    {
         val viewModel: ChatViewModel = hiltViewModel()
         val chooserDialog = remember {
             mutableStateOf(false)
@@ -194,11 +233,11 @@ fun ChatMessages(
     }
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn (modifier = Modifier.weight(1f)) {
-            item {
-                ChannelItem(channelName = channelName, Modifier) {
-
-                }
-            }
+//            item {
+//                ChannelItem(channelName = channelName, Modifier) {
+//
+//                }
+//            }
             items(messages) { message ->
                 ChatBubble(message = message)
             }
